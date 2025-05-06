@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RandomChoice</title>
+</head>
+<body>
+    <h1>输入选项，让agent为你选择</h1>
+    <input  type="text" id="inputchoices" placeholder="请输入">
+    <button onclick="addChoice()">添加选项</button>
+    <br></br>
+    <button  onclick="randomChoice()">随机选择</button>
+    <h2  id="result"></h2>
+    <script>
+        async function addChoice(){
+            const input=document.getElementById("inputchoices").value
+            await fetch("/add",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    choices:input
+                })
+            })
+            alert("添加成功")
+        }
+        async function randomChoice(){
+            const response=await fetch("/choose")
+            const data=await response.json()
+            document.getElementById("result").innerText="为您选择的是："+(data.result||"无")
+        }
+    </script>
+</body>
+</html>
