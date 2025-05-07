@@ -1,10 +1,6 @@
 import json
-
 from flask import Flask,render_template,request,jsonify
 import requests
-
-from serve import model
-
 DEEPSEEK_API_KEY = "sk-5c7cd1d5f90c4a38baf3e3184af20a00"
 DEEPSEEK_API_ENDPOINT = "https://api.deepseek.com/chat/completions"
 app=Flask(__name__)
@@ -42,14 +38,14 @@ class ChoiceAgent:
             response.raise_for_status()
             result=response.json()
             content=result["choices"][0]["message"]["content"]
-            choice_begin=content.find("选择的选项：")+6
-            choice_end=content.find("，实现计划：")
-            choices=content[choice_begin:choice_end]
-            plan=content[choice_end+6:]
-            return choices,plan
+            # choice_begin=content.find("选择的选项：")+6
+            # choice_end=content.find("，实现计划：")
+            # choices=content[choice_begin:choice_end]
+            # plan=content[choice_end+6:]
+            return content
         except Exception as e:
             print(f"调用API出错: {e}")
-            return None, None
+            return None
 
 agent=ChoiceAgent()
 @app.route('/')
@@ -65,7 +61,7 @@ def add_choice():
     return jsonify({"message": "选项和偏好添加成功！"})
 @app.route('/choose',methods=['GET'])
 def choose_choice():
-    result,plan=agent.make_choice_with_deepseek()
-    return jsonify({"result":result,"plan":plan})
+    result=agent.make_choice_with_deepseek()
+    return jsonify({"result":result})
 if __name__ == "__main__":
     app.run(debug=True)

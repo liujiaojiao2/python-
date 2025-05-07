@@ -31,7 +31,7 @@
         async function randomChoice(){
             const response=await fetch("/choose")
             const data=await response.json()
-            document.getElementById("result").innerHTML="为您选择的是："+(data.result||"无")+"<br>实现计划是："+(data.plan||"无")
+            document.getElementById("result").innerHTML=data.result
         }
     </script>
 </body>
